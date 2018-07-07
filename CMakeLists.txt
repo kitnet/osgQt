@@ -127,7 +127,7 @@ ENDIF()
 
 PROJECT(osgQt)
 
-FIND_PACKAGE(OpenSceneGraph 3.5.6 REQUIRED osgDB osgGA osgUtil osgText osgViewer osgWidget)
+FIND_PACKAGE(OpenSceneGraph 3.0.0 REQUIRED osgDB osgGA osgUtil osgText osgViewer osgWidget)
 SET(OPENSCENEGRAPH_SOVERSION 145)
 
 SET(OSG_PLUGINS osgPlugins-${OPENSCENEGRAPH_VERSION})
@@ -458,14 +458,14 @@ INCLUDE(OsgMacroUtils)
 
 IF  (DESIRED_QT_VERSION)
     IF  (DESIRED_QT_VERSION MATCHES 5)
-        FIND_PACKAGE(Qt5Widgets REQUIRED)
+        FIND_PACKAGE(Qt5 COMPONENTS Widgets REQUIRED)
     ELSEIF (DESIRED_QT_VERSION MATCHES 4)
         FIND_PACKAGE(Qt4 REQUIRED)
     ENDIF()
 
 ELSE()
 
-    FIND_PACKAGE(Qt5Widgets QUIET)
+    FIND_PACKAGE(Qt5 COMPONENTS Widgets REQUIRED)
 
     IF ( Qt5Widgets_FOUND )
         # CMake 2.8.8 or greater required
@@ -487,6 +487,7 @@ ENDIF()
 
 #If we have found Qt5, let's try to top off by getting the webkit as well
 IF ( Qt5Widgets_FOUND )
+    FIND_PACKAGE(Qt5OpenGL REQUIRED)
     FIND_PACKAGE(Qt5WebKitWidgets QUIET)
 
     IF(COMMAND cmake_policy)
@@ -878,10 +879,6 @@ IF(BUILD_DOCUMENTATION)
         SET(GENERATE_TAGFILE "${OpenSceneGraph_BINARY_DIR}/doc/OpenThreadsReferenceDocs/ot.tag")
     ENDIF()
 
-    # This processes our openthreads.doxyfile.cmake and generate a final doxyfile
-    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/doc/Doxyfiles/openthreads.doxyfile.cmake
-        ${PROJECT_BINARY_DIR}/doc/openthreads.doxyfile
-    )
     # copy the osg logo to documentations target folder
     CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/PlatformSpecifics/Windows/icons/src/osg32-32.png
         ${PROJECT_BINARY_DIR}/doc/OpenThreadsReferenceDocs/osg32-32.png COPYONLY
